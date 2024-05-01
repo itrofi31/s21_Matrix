@@ -1,0 +1,63 @@
+#suite sub_matrix
+
+#test sub_1
+ 	const int rows = (int)rand() % 100 + 1;
+  const int cols = (int)rand() % 100 + 1;
+  matrix_t m = {0};
+  s21_create_matrix(rows, cols, &m);
+  matrix_t mtx = {0};
+  s21_create_matrix(rows, cols, &mtx);
+  matrix_t check = {0};
+  s21_create_matrix(rows, cols, &check);
+  for (int i = 0; i < rows; i++) {
+    for (int j = 0; j < cols; j++) {
+      m.matrix[i][j] = (double)rand() / rand();
+      mtx.matrix[i][j] = (double)rand() / rand();
+      check.matrix[i][j] = m.matrix[i][j] - mtx.matrix[i][j];
+    }
+  }
+  matrix_t res = {0};
+  ck_assert_int_eq(s21_sub_matrix(&m, &mtx, &res), 0);
+  ck_assert_int_eq(s21_eq_matrix(&check, &res), SUCCESS);
+  s21_remove_matrix(&m);
+  s21_remove_matrix(&mtx);
+  s21_remove_matrix(&res);
+  s21_remove_matrix(&check);
+
+#test sub_2
+	const int rows = (int)rand() % 100 + 1;
+  const int cols = (int)rand() % 100 + 1;
+  matrix_t m = {0};
+  s21_create_matrix(rows, cols, &m);
+  matrix_t mtx = {0};
+  s21_create_matrix(rows, cols + 1, &mtx);
+  for (int i = 0; i < rows; i++) {
+    for (int j = 0; j < cols; j++) {
+      m.matrix[i][j] = (double)rand() / rand();
+      mtx.matrix[i][j] = (double)rand() / rand();
+    }
+  }
+  matrix_t res = {0};
+  ck_assert_int_eq(s21_sub_matrix(&m, &mtx, &res), 1);
+  s21_remove_matrix(&m);
+  s21_remove_matrix(&mtx);
+  s21_remove_matrix(&res);
+
+#test sub_3
+  const int rows = (int)rand() % 100 + 1;
+  const int cols = (int)rand() % 100 + 1;
+  matrix_t m = {0};
+  m.matrix = NULL;
+  m.columns = cols;
+  m.rows = rows;
+  matrix_t mtx = {0};
+  mtx.matrix = NULL;
+  mtx.columns = cols;
+  mtx.rows = rows;
+  matrix_t res = {0};
+  ck_assert_int_eq(s21_sub_matrix(&m, &mtx, &res), 1);
+  ck_assert_int_eq(s21_sub_matrix(&m, NULL, &res), 1);
+  ck_assert_int_eq(s21_sub_matrix(&m, &mtx, NULL), 1);
+  s21_remove_matrix(&m);
+  s21_remove_matrix(&mtx);
+  s21_remove_matrix(&res);

@@ -1,0 +1,37 @@
+#suite transpose_matrix
+
+#test transpose_1
+	const int rows = (int)rand() % 100 + 1;
+  const int cols = (int)rand() % 100 + 1;
+  matrix_t m = {0};
+  s21_create_matrix(rows, cols, &m);
+  matrix_t check = {0};
+  s21_create_matrix(cols, rows, &check);
+  for (int i = 0; i < rows; i++) {
+    for (int j = 0; j < cols; j++) {
+      double rand_val = (double)rand() / rand();
+      m.matrix[i][j] = rand_val;
+      check.matrix[j][i] = rand_val;
+    }
+  }
+  matrix_t res = {0};
+  ck_assert_int_eq(s21_transpose(&m, &res), 0);
+  ck_assert_int_eq(s21_eq_matrix(&check, &res), SUCCESS);
+  s21_remove_matrix(&m);
+  s21_remove_matrix(&res);
+  s21_remove_matrix(&check);
+
+#test transpose_2
+  const int rows = (int)rand() % 100 + 1;
+  const int cols = (int)rand() % 100 + 1;
+  matrix_t m = {0};
+  m.matrix = NULL;
+  m.columns = cols;
+  m.rows = rows;
+  matrix_t res = {0};
+  ck_assert_int_eq(s21_transpose(&m, &res), 1);
+  ck_assert_int_eq(s21_transpose(NULL, &res), 1);
+  ck_assert_int_eq(s21_transpose(&m, NULL), 1);
+  s21_remove_matrix(&m);
+  s21_remove_matrix(&res);
+ 	

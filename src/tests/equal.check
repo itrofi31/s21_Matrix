@@ -1,0 +1,71 @@
+#suite equal_matrix
+
+#test equal_1
+const int rows = (int)rand() % 10 + 1;
+const int cols = (int)rand() % 10 + 1;
+matrix_t m = {0};
+s21_create_matrix(rows, cols, &m);
+matrix_t mtx = {0};
+s21_create_matrix(rows, cols, &mtx);
+for (int i = 0; i < rows; i++) {
+  for (int j = 0; j < cols; j++) {
+    double rand_val = (double)rand() / rand();
+    m.matrix[i][j] = rand_val;
+    mtx.matrix[i][j] = rand_val;
+  }
+}
+ck_assert_int_eq(s21_eq_matrix(&m, &mtx), SUCCESS);
+s21_remove_matrix(&m);
+s21_remove_matrix(&mtx);
+
+#test equal_2
+const int rows = (int)rand() % 10 + 1;
+const int cols = (int)rand() % 10 + 1;
+matrix_t m = {0};
+s21_create_matrix(rows, cols, &m);
+matrix_t mtx = {0};
+s21_create_matrix(rows, cols, &mtx);
+for (int i = 0; i < rows; i++) {
+  for (int j = 0; j < cols; j++) {
+    double rand_val = (double)rand() / rand();
+    m.matrix[i][j] = rand_val + 1;
+    mtx.matrix[i][j] = rand_val;
+  }
+}
+ck_assert_int_eq(s21_eq_matrix(&m, &mtx), FAILURE);
+s21_remove_matrix(&m);
+s21_remove_matrix(&mtx);
+
+#test equal_3
+const int rows = (int)rand() % 10 + 1;
+const int cols = (int)rand() % 10 + 1;
+matrix_t m = {0};
+s21_create_matrix(rows, cols, &m);
+matrix_t mtx = {0};
+s21_create_matrix(rows, cols + 1, &mtx);
+for (int i = 0; i < rows; i++) {
+  for (int j = 0; j < cols; j++) {
+    double rand_val = (double)rand() / rand();
+    m.matrix[i][j] = rand_val + 1;
+    mtx.matrix[i][j] = rand_val;
+  }
+}
+ck_assert_int_eq(s21_eq_matrix(&m, &mtx), FAILURE);
+s21_remove_matrix(&m);
+s21_remove_matrix(&mtx);
+
+#test equal_4
+const int rows = (int)rand() % 10 + 1;
+const int cols = (int)rand() % 10 + 1;
+matrix_t m = {0};
+matrix_t mtx = {0};
+m.matrix = NULL;
+mtx.matrix = NULL;
+m.columns = cols;
+mtx.columns = cols;
+m.rows = rows;
+mtx.rows = rows;
+ck_assert_int_eq(s21_eq_matrix(&m, &mtx), FAILURE);
+ck_assert_int_eq(s21_eq_matrix(NULL, &mtx), FAILURE);
+s21_remove_matrix(&m);
+s21_remove_matrix(&mtx);

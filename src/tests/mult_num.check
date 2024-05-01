@@ -1,0 +1,40 @@
+#suite mult_num
+
+#test mult_num_1
+ 	const int rows = (int)rand() % 100 + 1;
+  const int cols = (int)rand() % 100 + 1;
+  matrix_t m = {0};
+  s21_create_matrix(rows, cols, &m);
+  matrix_t check = {0};
+  s21_create_matrix(rows, cols, &check);
+  double mult_number = (double)rand() / rand();
+  for (int i = 0; i < rows; i++) {
+    for (int j = 0; j < cols; j++) {
+      m.matrix[i][j] = (double)rand() / rand();
+      check.matrix[i][j] = m.matrix[i][j] * mult_number;
+    }
+  }
+  matrix_t res = {0};
+  ck_assert_int_eq(s21_mult_number(&m, mult_number, &res), 0);
+  ck_assert_int_eq(s21_eq_matrix(&check, &res), SUCCESS);
+  s21_remove_matrix(&m);
+  s21_remove_matrix(&res);
+  s21_remove_matrix(&check);
+
+#test mult_num_2
+  const int rows = (int)rand() % 100 + 1;
+  const int cols = (int)rand() % 100 + 1;
+  matrix_t m = {0};
+  m.matrix = NULL;
+  m.columns = cols;
+  m.rows = rows;
+  matrix_t mtx = {0};
+  mtx.matrix = NULL;
+  mtx.columns = cols;
+  mtx.rows = rows;
+  matrix_t res = {0};
+  ck_assert_int_eq(s21_mult_number(&m, 1, &res), 1);
+  ck_assert_int_eq(s21_mult_number(NULL, 1, &res), 1);
+  s21_remove_matrix(&m);
+  s21_remove_matrix(&mtx);
+  s21_remove_matrix(&res);

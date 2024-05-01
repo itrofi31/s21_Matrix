@@ -1,0 +1,86 @@
+#suite mult_matrix
+
+#test mult_1
+	const int rows = (int)rand() % 100 + 1;
+  const int cols = (int)rand() % 100 + 1;
+  matrix_t m = {0};
+  s21_create_matrix(rows, cols, &m);
+  matrix_t mtx = {0};
+  s21_create_matrix(cols, rows, &mtx);
+  for (int i = 0; i < rows; i++)
+    for (int j = 0; j < cols; j++) m.matrix[i][j] = (double)rand() / rand();
+  for (int i = 0; i < cols; i++)
+    for (int j = 0; j < rows; j++) mtx.matrix[i][j] = (double)rand() / rand();
+  matrix_t check = {0};
+  s21_create_matrix(m.rows, mtx.columns, &check);
+  for (int i = 0; i < m.rows; i++) {
+    for (int j = 0; j < mtx.columns; j++) {
+      check.matrix[i][j] = 0;
+      for (int k = 0; k < m.columns; k++)
+        check.matrix[i][j] += m.matrix[i][k] * mtx.matrix[k][j];
+    }
+  }
+  matrix_t res = {0};
+  ck_assert_int_eq(s21_mult_matrix(&m, &mtx, &res), 0);
+  ck_assert_int_eq(s21_eq_matrix(&check, &res), SUCCESS);
+  s21_remove_matrix(&m);
+  s21_remove_matrix(&mtx);
+  s21_remove_matrix(&res);
+  s21_remove_matrix(&check);
+
+#test mult_2
+const int rows = (int)rand() % 100 + 1;
+  const int cols = (int)rand() % 100 + 1;
+  matrix_t m = {0};
+  s21_create_matrix(rows, cols, &m);
+  matrix_t mtx = {0};
+  s21_create_matrix(cols + 1, rows, &mtx);
+  matrix_t res = {0};
+  ck_assert_int_eq(s21_mult_matrix(&m, &mtx, &res), 1);
+  s21_remove_matrix(&m);
+  s21_remove_matrix(&mtx);
+  s21_remove_matrix(&res);
+
+#test mult_3
+	const int rows = (int)rand() % 100 + 1;
+  const int cols = (int)rand() % 100 + 1;
+  matrix_t m = {0};
+  m.matrix = NULL;
+  m.columns = cols;
+  m.rows = rows;
+  matrix_t mtx = {0};
+  mtx.matrix = NULL;
+  mtx.columns = cols;
+  mtx.rows = rows;
+  matrix_t res = {0};
+  ck_assert_int_eq(s21_mult_matrix(&m, &mtx, &res), 1);
+  ck_assert_int_eq(s21_mult_matrix(NULL, &mtx, &res), 1);
+  s21_remove_matrix(&m);
+  s21_remove_matrix(&mtx);
+  s21_remove_matrix(&res);
+
+	
+	#test mult_4
+	const int rows = 2;
+  const int cols = 3;
+  matrix_t m = {0};
+  s21_create_matrix(rows, cols, &m);
+  matrix_t mtx = {0};
+  s21_create_matrix(cols, rows, &mtx);
+  for (int i = 0, c = 1; i < rows; i++)
+    for (int j = 0; j < cols; j++) m.matrix[i][j] = c++;
+  for (int i = 0, c = 7; i < cols; i++)
+    for (int j = 0; j < rows; j++) mtx.matrix[i][j] = c++;
+  matrix_t check = {0};
+  s21_create_matrix(m.rows, mtx.columns, &check);
+  check.matrix[0][0] = 58;
+  check.matrix[0][1] = 64;
+  check.matrix[1][0] = 139;
+  check.matrix[1][1] = 154;
+  matrix_t res = {0};
+  ck_assert_int_eq(s21_mult_matrix(&m, &mtx, &res), 0);
+  ck_assert_int_eq(s21_eq_matrix(&check, &res), SUCCESS);
+  s21_remove_matrix(&m);
+  s21_remove_matrix(&mtx);
+  s21_remove_matrix(&res);
+  s21_remove_matrix(&check);
