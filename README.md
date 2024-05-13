@@ -2,7 +2,11 @@
 
 Implementation of matrix.h library using C programming language.
 
-## Information
+## Contents
+
+1. [Information](#information) 
+2. [Library functions](#library-functions) 
+3. [Build](#build) 
 
 ### Library functions
 | Name                   | Description                                              |
